@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const talkers = require('./talker');
 const { validateEmail, validatePassword } = require('./middlewares/validations');
-const { generateToken } = require('./randomTokenGenerator');
+const crypto = require('crypto');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,10 +40,10 @@ app.post('/login', validateEmail, validatePassword, (request, response) => {
   if (email === ' ' || password === ' ') {
     return response.status(400).json({ message: 'O campo "email" e "password" são obrigatórios' });
   } 
-    const token = generateToken();
+    const token = crypto.randomBytes(8).toString('hex');;
     return response.status(200).json({ token });
 } catch (error) {
-  return response.status(400).json({ message: error.message });
+  return response.status(500).end();
 }
 });
 
