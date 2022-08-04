@@ -6,6 +6,7 @@ const talkers = require('./talker');
 const { validateEmail, validatePassword } = require('./middlewares/LoginValidations');
 const { tokenValidation } = require('./middlewares/TokenValidation');
 const { nameValidation } = require('./middlewares/NameValidation');
+const { ageValidation } = require('./middlewares/AgeValidation');
 
 const app = express();
 app.use(bodyParser.json());
@@ -49,7 +50,7 @@ app.post('/login', validateEmail, validatePassword, (request, response) => {
 }
 });
 
-app.post('/talker', tokenValidation, nameValidation, (request, response) => {
+app.post('/talker', tokenValidation, nameValidation, ageValidation, (request, response) => {
   const { name } = request.body;
 });
 
