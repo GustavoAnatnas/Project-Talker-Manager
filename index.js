@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const crypto = require('crypto');
 const talkers = require('./talker');
-const { validateEmail, validatePassword } = require('./middlewares/validations');
+const { validateEmail, validatePassword } = require('./middlewares/LoginValidations');
+const { tokenValidation } = require('./middlewares/TokenValidation');
 
 const app = express();
 app.use(bodyParser.json());
@@ -45,6 +46,10 @@ app.post('/login', validateEmail, validatePassword, (request, response) => {
 } catch (error) {
   return response.status(500).end();
 }
+});
+
+app.post('/talker', tokenValidation, (request, response) => {
+  const { name } = request.body;
 });
 
 app.listen(PORT, () => {
