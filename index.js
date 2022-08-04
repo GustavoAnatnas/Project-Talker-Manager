@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const talkers = require('./talker');
+const { validateEmail, validatePassword } = require('./middlewares/validations');
+const { generateToken } = require('./randomTokenGenerator');
 
 const app = express();
 app.use(bodyParser.json());
@@ -30,6 +32,19 @@ app.get('/talker/:id', (request, response) => {
     return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   return response.status(200).json(talker);
+});
+
+app.post('/login', validateEmail, validatePassword, (request, response) => {
+  try {
+  const { email, password } = request.body;
+  if (email === ' ' || password === ' ') {
+    return response.status(400).json({ message: 'O campo "email" e "password" são obrigatórios' });
+  } 
+    const token = generateToken();
+    return response.status(200).json({ token });
+} catch (error) {
+  return response.status(400).json({ message: error.message });
+}
 });
 
 app.listen(PORT, () => {
