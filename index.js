@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const talkers = require('./talker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -21,6 +22,15 @@ app.get('/talker', async (_request, response) => {
       }
       return response.status(200).json(file);
     });
+
+app.get('/talker/:id', (request, response) => {
+  const { id } = request.params;
+  const talker = talkers.find((talk) => talk.id === Number(id));
+  if (!talker) {
+    return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  return response.status(200).json(talker);
+});
 
 app.listen(PORT, () => {
   console.log('Online');
