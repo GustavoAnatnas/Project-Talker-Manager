@@ -9,6 +9,7 @@ const { nameValidation } = require('./middlewares/NameValidation');
 const { ageValidation } = require('./middlewares/AgeValidation');
 const { talkValidation } = require('./middlewares/TalkValidation');
 const { watchedAtValidation } = require('./middlewares/WatchedAtValidation');
+const { rateValidation } = require('./middlewares/RateValidation');
 
 const app = express();
 app.use(bodyParser.json());
@@ -52,7 +53,8 @@ app.post('/login', validateEmail, validatePassword, (request, response) => {
 }
 });
 
-app.post('/talker', tokenValidation, nameValidation, ageValidation, talkValidation, watchedAtValidation, (request, response) => {
+app.post('/talker', tokenValidation, nameValidation, ageValidation, talkValidation,
+  watchedAtValidation, rateValidation, (request, response) => {
   const { name } = request.body;
 });
 
