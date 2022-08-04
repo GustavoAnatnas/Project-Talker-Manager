@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const talkers = require('./talker');
 const { validateEmail, validatePassword } = require('./middlewares/LoginValidations');
 const { tokenValidation } = require('./middlewares/TokenValidation');
+const { nameValidation } = require('./middlewares/NameValidation');
 
 const app = express();
 app.use(bodyParser.json());
@@ -48,7 +49,7 @@ app.post('/login', validateEmail, validatePassword, (request, response) => {
 }
 });
 
-app.post('/talker', tokenValidation, (request, response) => {
+app.post('/talker', tokenValidation, nameValidation, (request, response) => {
   const { name } = request.body;
 });
 
