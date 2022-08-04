@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const crypto = require('crypto');
 const talkers = require('./talker');
 const { validateEmail, validatePassword } = require('./middlewares/validations');
-const crypto = require('crypto');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,7 +40,7 @@ app.post('/login', validateEmail, validatePassword, (request, response) => {
   if (email === ' ' || password === ' ') {
     return response.status(400).json({ message: 'O campo "email" e "password" são obrigatórios' });
   } 
-    const token = crypto.randomBytes(8).toString('hex');;
+    const token = crypto.randomBytes(8).toString('hex');
     return response.status(200).json({ token });
 } catch (error) {
   return response.status(500).end();
