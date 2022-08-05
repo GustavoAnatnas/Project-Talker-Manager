@@ -57,7 +57,6 @@ ageValidation,
 talkValidation,
 rateValidation,
 watchedAtValidation,
-
 async (request, response) => {
     const { name, age, talk } = request.body;
     const tal = await readFile();
@@ -72,6 +71,12 @@ async (request, response) => {
     return response.status(201).json(newTalk);
 });
 
+app.delete('/talker/:id', tokenValidation, async (request, response) => {
+  const { id } = request.params;
+  const tal = await readFile();
+  await writeFile(tal.filter((talk) => talk.id !== Number(id)));
+  return response.status(204).json({ message: 'Pessoa palestrante removida com sucesso' });
+});
 app.listen(PORT, () => {
   console.log('Online');
 });
