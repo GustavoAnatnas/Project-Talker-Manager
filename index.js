@@ -4,12 +4,9 @@ const fs = require('fs').promises;
 const crypto = require('crypto');
 const talkers = require('./talker');
 const { validateEmail, validatePassword } = require('./middlewares/LoginValidations');
-const { tokenValidation } = require('./middlewares/TokenValidation');
-const { nameValidation } = require('./middlewares/NameValidation');
-const { ageValidation } = require('./middlewares/AgeValidation');
-const { talkValidation } = require('./middlewares/TalkValidation');
-const { watchedAtValidation } = require('./middlewares/WatchedAtValidation');
-const { rateValidation } = require('./middlewares/RateValidation');
+const { nameValidation, ageValidation, talkValidation, rateValidation, 
+  watchedAtValidation, tokenValidation } = require('./middlewares/talkerValidation');
+const { readFile, writeFile } = require('./helper/ReadWriteFile');
 
 const app = express();
 app.use(bodyParser.json());
@@ -53,9 +50,26 @@ app.post('/login', validateEmail, validatePassword, (request, response) => {
 }
 });
 
-app.post('/talker', tokenValidation, nameValidation, ageValidation, talkValidation,
-  watchedAtValidation, rateValidation, (request, response) => {
-  const { name } = request.body;
+app.post('/talker',
+tokenValidation,
+nameValidation,
+ageValidation,
+talkValidation,
+rateValidation,
+watchedAtValidation,
+
+async (request, response) => {
+    const { name, age, talk } = request.body;
+    const tal = await readFile();
+    const newTalk = {
+      id: tal.length + 1,
+      name,
+      age,
+      talk,
+    };
+    tal.push(newTalk);
+    await writeFile(tal);
+    return response.status(201).json(newTalk);
 });
 
 app.listen(PORT, () => {
