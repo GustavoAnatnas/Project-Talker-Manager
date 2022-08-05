@@ -28,6 +28,17 @@ app.get('/talker', async (_request, response) => {
       return response.status(200).json(file);
     });
 
+    app.get('/talker/search', tokenValidation, async (request, response) => {
+      const { q } = request.query;
+      const tal = await readFile(); 
+      const filteredTalker = tal.filter((talk) => talk.name.toLowerCase()
+      .includes(q.toLowerCase()));
+      if (!q || q.length === 0) {
+        return response.status(200).json(tal);
+      }
+      return response.status(200).json(filteredTalker);
+    });
+
 app.get('/talker/:id', (request, response) => {
   const { id } = request.params;
   const talker = talkers.find((talk) => talk.id === Number(id));
